@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Hello AngularJS</title>
+		<link href="/webjars/bootstrap/@bootstrap.version@/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+		<style type="text/css">
+			[ng\:cloak], [ng-cloak], .ng-cloak {
+				display: none !important;
+			}
+		</style>
+	</head>
+	<body ng-app="app" ng-cloak="" class="ng-cloak">
+		<div ng-controller="Navigation" class="container">
+			<ul class="nav nav-pills" role="tablist">
+				<li ng-class="{active:tab('home')}">
+					<a href="#/home">home</a>
+				</li>
+				<li ng-show="authenticated" ng-class="{active:tab('resource')}">
+					<a href="#/resource">resource</a>
+				</li>
+				<li ng-show="authenticated">
+					<a href="" ng-click="logout()">logout</a>
+				</li>
+				<li ng-show="!authenticated" ng-class="{active:tab('login')}">
+					<a href="#/login">login</a>
+				</li>
+			</ul>
+		</div>
+		<div ng-view="" class="container"></div>
+		<script src="/webjars/jquery/@jquery.version@/jquery.min.js" type="text/javascript"></script>
+		<script src="/webjars/angularjs/@angular.version@/angular.min.js" type="text/javascript"></script>
+		<script src="/webjars/angularjs/@angular.version@/angular-resource.min.js" type="text/javascript"></script>
+		<script src="/webjars/angularjs/@angular.version@/angular-route.min.js" type="text/javascript"></script>
+		<script src="/webjars/angularjs/@angular.version@/angular-cookies.min.js" type="text/javascript"></script>
+		<!-- Angular App -->
+		<script src="/js/services.js" type="text/javascript"></script>
+		<script src="/js/navigation.js" type="text/javascript"></script>
+		<script src="/js/resource.js" type="text/javascript"></script>
+		<script src="/js/app.js" type="text/javascript"></script>
+	</body>
+</html>

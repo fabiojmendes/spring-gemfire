@@ -1,0 +1,15 @@
+# Eclipse
+.project
+.settings
+.classpath
+.tern-project
+
+# Maven
+/target
+
+# Mac OSX
+.DS_Store
+
+# Derby
+/data/
+/derby.log
