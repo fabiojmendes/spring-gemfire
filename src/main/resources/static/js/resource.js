@@ -20,6 +20,8 @@ function ResourceAdd($scope, $location, Resource) {
 	$scope.save = function() {
 		$scope.res.$save(function(res) {
 			$location.path("/resource/list");
+		}, function(error) {
+			alert("Error saving the resource " + error.data);
 		});
 	};
 
@@ -29,10 +31,12 @@ function ResourceAdd($scope, $location, Resource) {
 /**
  * ResourceEdit Controller
  */
-function ResourceEdit($scope, $routeParams, Resource) {
+function ResourceEdit($scope, $location, $routeParams, Resource) {
 	$scope.save = function() {
 		$scope.res.$update(function() {
-			// Display msg
+			$location.path("/resource/list");
+		}, function(error) {
+			alert("Error saving the resource " + error.data);
 		});
 	};
 

@@ -1,16 +1,9 @@
 package org.demo.domain.resource;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Random;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
-import org.apache.commons.codec.digest.DigestUtils;
 import org.demo.domain.DomainEventPublisher;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Service;
 
 /**
@@ -18,41 +11,23 @@ import org.springframework.stereotype.Service;
  *
  */
 @Service
-@ConfigurationProperties(prefix = "application")
 public class ResourceGenerator {
-
-	private int bufferSize;
 
 	private ResourceRepository resourceRepository;
 
 	private DomainEventPublisher domainEventPublisher;
 
+	private KeyGenerator keyGenerator;
+
 	@Autowired
-	public ResourceGenerator(ResourceRepository resourceRepository, DomainEventPublisher domainEventPublisher) {
-		bufferSize = 1024;
+	public ResourceGenerator(ResourceRepository resourceRepository, DomainEventPublisher domainEventPublisher, KeyGenerator keyGenerator) {
 		this.resourceRepository = resourceRepository;
 		this.domainEventPublisher = domainEventPublisher;
+		this.keyGenerator = keyGenerator;
 	}
 
-	public void setBufferSize(int bufferSize) {
-		this.bufferSize = bufferSize;
-	}
-
-	public Resource generate(String name) {
-		List<Double> buffer = new ArrayList<>(bufferSize);
-		for (int i = 0; i < bufferSize; i++) {
-			buffer.add(0.0);
-		}
-		Random rnd = new Random(new Date().getTime());
-		List<Double> list = buffer.stream()
-				.map((d) -> rnd.nextDouble())
-				.map(Math::sqrt)
-				.sorted()
-				.collect(Collectors.toList());
-
-		String key = DigestUtils.sha1Hex(list.toString());
-		Resource resource = new Resource(UUID.randomUUID(), domainEventPublisher);
-		resource.setKey(key);
+	public Resource generate(String name, ResourceType resourceType) {
+		Resource resource = resourceType.createResource(UUID.randomUUID(), keyGenerator, domainEventPublisher);
 		resource.setName(name);
 		return resourceRepository.save(resource);
 	}
@@ -62,10 +37,13 @@ public class ResourceGenerator {
 	 * @param name
 	 * @return
 	 */
-	public void update(UUID id, String name) {
+	public Resource update(UUID id, String name, ResourceType type) {
 		Resource resource = resourceRepository.findById(id).orElseThrow(IllegalArgumentException::new);
+		if (!resource.getType().equals(type)) {
+			resource = type.createResource(id, keyGenerator, domainEventPublisher);
+		}
 		resource.setName(name);
-		resourceRepository.save(resource);
+		return resourceRepository.save(resource);
 	}
 
 	/**

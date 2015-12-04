@@ -74,11 +74,4 @@ public class ResourceApplicationTests extends BaseIntegrationTests {
 		ResponseEntity<String> response = template.getForEntity(baseUrl + "/api/resource/{id}", String.class, TestData.R3.getId());
 		assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
 	}
-
-
-	@Test
-	public void testInvalidDelete() {
-		ResponseEntity<String> response = template.exchange(baseUrl + "/api/resource/{id}", HttpMethod.DELETE, null, String.class, UUID.randomUUID());
-		assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
-	}
 }

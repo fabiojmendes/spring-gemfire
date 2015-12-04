@@ -38,7 +38,7 @@ public class ResourceController {
 
 	@RequestMapping(method = RequestMethod.POST)
 	public Resource create(@RequestBody ResourceForm form) {
-		return generator.generate(form.name);
+		return generator.generate(form.getName(), form.getType());
 	}
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
@@ -48,7 +48,7 @@ public class ResourceController {
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.PUT)
 	public void update(@PathVariable UUID id, @RequestBody ResourceForm form) {
-		generator.update(id, form.name);
+		generator.update(id, form.getName(), form.getType());
 	}
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE)

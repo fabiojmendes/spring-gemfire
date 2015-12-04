@@ -20,14 +20,14 @@ import org.mockito.runners.MockitoJUnitRunner;
  *
  */
 @RunWith(MockitoJUnitRunner.class)
-public class ResourceTest {
+public class FileTest {
 
 	@Mock
 	private DomainEventPublisher eventPublisherMock;
 
 	@Test
 	public void testEventPublished() {
-		Resource res = new Resource(UUID.randomUUID(), eventPublisherMock);
+		File res = new File(UUID.randomUUID(), eventPublisherMock);
 		res.setKey("lala");
 
 		verify(eventPublisherMock).publish(isA(DomainEvent.class));

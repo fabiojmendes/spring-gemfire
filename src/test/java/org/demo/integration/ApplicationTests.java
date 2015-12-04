@@ -19,27 +19,7 @@ public class ApplicationTests extends BaseIntegrationTests {
 	}
 
 	@Test
-	public void userEndpointProtected() {
-		ResponseEntity<String> response = template.getForEntity(baseUrl + "/api/security/user", String.class);
-		assertEquals(HttpStatus.UNAUTHORIZED, response.getStatusCode());
-	}
-
-	@Test
-	public void resourceEndpointProtected() {
-		ResponseEntity<String> response = template.getForEntity(baseUrl + "/api/resource", String.class);
-		assertEquals(HttpStatus.UNAUTHORIZED, response.getStatusCode());
-	}
-
-	@Test
-	public void loginSucceeds() {
-		RestTemplate template = new TestRestTemplate("user", "password");
-		ResponseEntity<String> response = template.getForEntity(baseUrl + "/api/security/user", String.class);
-		assertEquals(HttpStatus.OK, response.getStatusCode());
-	}
-
-	@Test
 	public void resourceEndpointSucceeds() {
-		RestTemplate template = new TestRestTemplate("user", "password");
 		ResponseEntity<String> response = template.getForEntity(baseUrl + "/api/resource", String.class);
 		assertEquals(HttpStatus.OK, response.getStatusCode());
 	}

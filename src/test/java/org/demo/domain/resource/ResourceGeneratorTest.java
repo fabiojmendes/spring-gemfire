@@ -9,7 +9,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 import org.demo.domain.DomainEventPublisher;
-import org.demo.domain.resource.Resource;
+import org.demo.domain.resource.File;
 import org.demo.domain.resource.ResourceGenerator;
 import org.demo.domain.resource.ResourceRepository;
 import org.junit.Before;
@@ -31,41 +31,54 @@ public class ResourceGeneratorTest {
 	@Mock
 	private DomainEventPublisher domainEventPublisher;
 
-	private Resource testResource;
+	@Mock
+	private KeyGenerator keyGenerator;
+
+	private File testResource;
 
 	@InjectMocks
 	private ResourceGenerator generator;
 
 	@Before
 	public void setup() {
-		testResource = new Resource(UUID.randomUUID(), domainEventPublisher);
+		testResource = new File(UUID.randomUUID(), domainEventPublisher);
 		testResource.setKey("1234");
 		testResource.setName(NAME);
+
+		when(keyGenerator.generate()).thenReturn("1234567890");
+		when(resourceRepositoryMock.save(Matchers.isA(Resource.class))).thenAnswer(invocation -> {
+			return invocation.getArgumentAt(0, Resource.class);
+		});
 	}
 
 	@Test
 	public void testGenerate() {
-		when(resourceRepositoryMock.save(Matchers.any(Resource.class))).thenAnswer(invocation -> {
-			return invocation.getArgumentAt(0, Resource.class);
-		});
-		Resource result = generator.generate(NAME);
+		Resource result = generator.generate(NAME, ResourceType.FILE);
 		assertThat(result, notNullValue());
-		assertThat(result.getKey().length(), is(40));
+		assertThat(result.getKey(), is("1234567890"));
 		assertThat(result.getName(), is(NAME));
-		verify(resourceRepositoryMock).save(Matchers.any(Resource.class));
+		verify(resourceRepositoryMock).save(Matchers.isA(Resource.class));
 	}
 
 	@Test
 	public void testUpdate() {
 		when(resourceRepositoryMock.findById(testResource.getId())).thenReturn(Optional.of(testResource));
-		generator.update(testResource.getId(), "New Name");
-		assertThat(testResource.getName(), is("New Name"));
+		Resource res = generator.update(testResource.getId(), "New Name", ResourceType.FILE);
+		assertThat(res.getName(), is("New Name"));
+	}
+
+	@Test
+	public void testUpdateNewType() {
+		when(resourceRepositoryMock.findById(testResource.getId())).thenReturn(Optional.of(testResource));
+		Resource res = generator.update(testResource.getId(), "New Name", ResourceType.STREAM);
+		assertThat(res.getName(), is("New Name"));
+		assertThat(res.getType(), is(ResourceType.STREAM));
 	}
 
 	@Test(expected = IllegalArgumentException.class)
 	public void testUpdateWithInvalidId() {
 		when(resourceRepositoryMock.findById(anyObject())).thenReturn(Optional.empty());
-		generator.update(UUID.randomUUID(), "New Name");
+		generator.update(UUID.randomUUID(), "New Name", ResourceType.FILE);
 	}
 
 	@Test

@@ -3,6 +3,7 @@ package org.demo.integration;
 import org.demo.Application;
 import org.demo.domain.resource.Resource;
 import org.demo.domain.resource.ResourceGenerator;
+import org.demo.domain.resource.ResourceType;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Value;
@@ -37,9 +38,9 @@ public abstract class BaseIntegrationTests {
 
 		@Bean InitializingBean initTestData(ResourceGenerator generator) {
 			return () -> {
-				R1 = generator.generate("R1");
-				R2 = generator.generate("R2");
-				R3 = generator.generate("R3");
+				R1 = generator.generate("R1", ResourceType.FILE);
+				R2 = generator.generate("R2", ResourceType.FILE);
+				R3 = generator.generate("R3", ResourceType.STREAM);
 			};
 		}
 

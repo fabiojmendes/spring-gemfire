@@ -12,10 +12,6 @@ angular
 			.when('/home', {
 				templateUrl : 'templates/home.html'
 			})
-			.when('/login', {
-				templateUrl : 'templates/login.html',
-				controller : 'Navigation'
-			})
 			/**
 			 * Resources
 			 */

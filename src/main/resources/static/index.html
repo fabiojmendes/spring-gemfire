@@ -15,14 +15,8 @@
 				<li ng-class="{active:tab('home')}">
 					<a href="#/home">home</a>
 				</li>
-				<li ng-show="authenticated" ng-class="{active:tab('resource')}">
+				<li ng-class="{active:tab('resource')}">
 					<a href="#/resource">resource</a>
-				</li>
-				<li ng-show="authenticated">
-					<a href="" ng-click="logout()">logout</a>
-				</li>
-				<li ng-show="!authenticated" ng-class="{active:tab('login')}">
-					<a href="#/login">login</a>
 				</li>
 			</ul>
 		</div>
